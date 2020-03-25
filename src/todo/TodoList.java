@@ -10,60 +10,53 @@ import java.util.List;
 
 public class TodoList {
   private List<String> todoItems;
-
-  public TodoList(List<String> todoItems) {
-    this.todoItems = todoItems;
-  }
+  Path filePath;
 
   public TodoList() {
-
+    filePath = Paths.get("assets/todos.txt");
+    readTheFile();
   }
-  private List<String> readTheFile() {
-    String pathTodosFile = "assets/todos.txt";
-    Path filepath = Paths.get("assets/todos.txt");
+
+  private void readTheFile() {
     try {
-      List<String> todoItems = Files.readAllLines(filepath);
-      List<String> todoItemsStored = new ArrayList<>();
-      for (String todoItem : todoItems) {
-        todoItemsStored.add(todoItem);
-      }
-      return todoItemsStored;
+      todoItems = Files.readAllLines(filePath);
+
     } catch (IOException e) {
       System.out.println("could not read file");
     }
-    return null;
+
+  }
+
+  public void writeFile(String reason) {
+    try {
+      Files.write(filePath, todoItems);
+    } catch (IOException e) {
+      System.err.println("Could not update file while " + reason);
+    }
   }
 
   public void listItems() {
-    List<String> filecontent = readTheFile();
     int counter = 0;
-    for (String todoItem : filecontent) {
+    for (String todoItem : todoItems) {
       counter++;
-      System.out.println(counter + " - " + todoItem);
+      System.err.println(counter + " - " + todoItem);
     }
     if (counter == 0) {
-      System.out.println("No todos for today! :)");
+      System.err.println("No todos for today! :)");
     }
   }
 
-  public void addItem(String itemToBeAdded) throws IOException {
-    List<String> filecontent = readTheFile();
-    filecontent.add(itemToBeAdded);
-    Path path = Paths.get("assets/todos.txt");
-    Files.write(path, filecontent);
+  public void addItem(String itemToBeAdded) {
+    todoItems.add(itemToBeAdded);
+    writeFile("adding");
   }
 
-  public void removeItem(int index) throws IOException {
-    String pathTodosFile = "assets/todos.txt";
-    Path filepath = Paths.get("assets/todos.txt");
-    List<String> filecontent = readTheFile();
-    if (filecontent.size() <= index) {
-      System.out.println("Unable to remove: index is out of bound");
+  public void removeItem(int index) {
+    if (todoItems.size() < index) {
+      System.err.println("Unable to remove: index is out of bound");
       return;
     }
-    for (String todoItem : filecontent) {
-      filecontent.remove(index - 1);
-      Files.write(filepath, filecontent);
-    }
+    todoItems.remove(index - 1);
+    writeFile("removing");
   }
 }

@@ -6,19 +6,11 @@ import java.nio.file.Paths;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    //System.out.println(args.length);
+
     TodoList todoList = new TodoList();
 
-
     if (args.length == 0) {
-      System.err.println("Command Line Todo application\n" +
-          "=============================\n" +
-          "\n" +
-          "Command line arguments:\n" +
-          "    -l   Lists all the tasks\n" +
-          "    -a   Adds a new task\n" +
-          "    -r   Removes an task\n" +
-          "    -c   Completes an task");
+      printUsage();
     } else if (args.length >= 1) {
       if (args[0].equals("-l")) {
         todoList.listItems();
