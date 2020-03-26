@@ -33,7 +33,17 @@ public class Main {
           }
         }
       } else if (args[0].equals("-c")) {
-        System.out.println("c");
+        if (args.length == 1) {
+          System.err.println("Unable to remove: no index provided");
+          return;
+        } else {
+          try {
+            Integer index = Integer.parseInt(args[1]);
+            todoList.checkItem(index);
+          } catch (NumberFormatException e) {
+            System.err.println("Unable to remove: index is not a number");
+          }
+        }
       } else {
         System.err.println("Unsupported argument");
         printUsage();
